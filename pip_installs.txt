@@ -1,4 +1,6 @@
 pip install opencv-python
 pip install pygame
 pip install tkvideoplayer
-pip install pyserial
+pip install serial
+pip install cmake
+pip install dlib
