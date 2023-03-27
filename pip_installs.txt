@@ -1,5 +1,4 @@
 pip install opencv-python
 pip install pygame
-pip install mutagen // if mp3 player is used
 pip install tkvideoplayer
-
+pip install pyserial
