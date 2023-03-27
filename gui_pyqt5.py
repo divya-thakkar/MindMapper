@@ -62,9 +62,6 @@ def window():
     button_Down.clicked.connect(clicked_Down_button)
     button_Menu.clicked.connect(clicked_Menu_button)
     
-
-
-
     window.show()
     sys.exit(app.exec_())
 

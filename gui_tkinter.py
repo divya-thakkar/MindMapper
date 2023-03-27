@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.filedialog import askopenfile
 from tkVideoPlayer import TkinterVideo
+from pygame import mixer
 
 window = Tk()
 window.title("Television")
@@ -13,6 +14,22 @@ videoplayer.load(r"iCarly_scene.mp4")
 videoplayer.pack(expand=True, fill="both")
  
 videoplayer.play()
+
+mixer.init()
+mixer.music.load("Yessirskiii.mp3")
+
+def play_music():
+    if button["text"] == "Play":
+        button["text"] = "Pause"
+        button["bg"] = "red"
+        mixer.music.play()
+    else:
+        button["text"] = "Play"
+        button["bg"] = "green"
+        mixer.music.pause()
+
+button = Button(window, text='Play', width=14, bg='green', fg='black', command=play_music)
+button.pack()
 
 def playAgain():
     print("Video Played")
