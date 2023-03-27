@@ -10,52 +10,44 @@ window.geometry("1200x675")
 window.configure(bg="black")
  
 videoplayer = TkinterVideo(master=window, scaled=True)
-videoplayer.load(r"iCarly_scene.mp4")
+videoplayer.load(r"./assets/iCarly_scene.mp4")
 videoplayer.pack(expand=True, fill="both")
- 
-videoplayer.play()
 
 mixer.init()
-mixer.music.load("Yessirskiii.mp3")
+mixer.music.load("./assets/iCarly_scene_compressed.mp3")
 
-def play_music():
-    if button["text"] == "Play":
-        button["text"] = "Pause"
-        button["bg"] = "red"
-        mixer.music.play()
+videoplayer.play()
+mixer.music.play()
+
+def pause_play():
+    if pause_btn["text"] == "Play":
+        pause_btn["text"] = "Pause"
+        pause_btn["bg"] = "red"
+        mixer.music.unpause()
+        videoplayer.play()
     else:
-        button["text"] = "Play"
-        button["bg"] = "green"
+        pause_btn["text"] = "Play"
+        pause_btn["bg"] = "green"
         mixer.music.pause()
+        videoplayer.pause()
 
-button = Button(window, text='Play', width=14, bg='green', fg='black', command=play_music)
-button.pack()
-
-def playAgain():
-    print("Video Played")
-    videoplayer.play()
-
-def StopVideo():
-    print("Video Stopped")
-    videoplayer.stop()
-
-def PauseVideo():
-    print("Video Paused")
-    videoplayer.pause()
-    
 
 # center this label
-lbl1 = Label(window, text="Mind Mapper Sample Television", bg="black", fg="white", font="none 24 bold")
-lbl1.config(anchor=CENTER)
-lbl1.pack()
+#lbl1 = Label(window, text="Mind Mapper Sample Television", bg="black", fg="white", font="none 24 bold")
+label = Label(window, text="Chinese TV", bg="black", fg="white", font="none 24 bold")
+label.config(anchor=CENTER)
+label.pack()
 
-playbtn = Button(window, text='Play Video', command=lambda: playAgain())
-playbtn.pack(side=TOP, pady=3)
+pause_btn = Button(window, text='Pause', width=14, bg='red', fg='black', command=lambda: pause_play())
+pause_btn.pack()
 
-stopbtn = Button(window, text='Stop Video', command=lambda: StopVideo())
-stopbtn.pack(side=TOP, padx=4)
+volUp_btn = Button(window, text='Volume Up', command=lambda: playAgain())
+volUp_btn.pack(side=TOP, pady=3)
 
-pausebtn = Button(window, text='Pause Video', command=lambda: PauseVideo())
-pausebtn.pack(side=TOP, padx=5)
+volDown_btn = Button(window, text='Volume Down', command=lambda: StopVideo())
+volDown_btn.pack(side=TOP, padx=4)
+
+menu_btn = Button(window, text='Menu', command=lambda: PauseVideo())
+menu_btn.pack(side=TOP, padx=5)
 
 window.mainloop()
