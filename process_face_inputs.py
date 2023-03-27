@@ -13,7 +13,7 @@ def detect_mouth_and_headnods():
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
     # Load the facial landmark detector
-    predictor_path = "shape_predictor_68_face_landmarks.dat"
+    predictor_path = "./assets/openCV/shape_predictor_68_face_landmarks.dat"
     predictor = dlib.shape_predictor(predictor_path)
 
     # Define the minimum height of the mouth region relative to the height of the face region
