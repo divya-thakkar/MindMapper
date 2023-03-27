@@ -10,14 +10,20 @@ window.geometry("1200x675")
 window.configure(bg="black")
  
 videoplayer = TkinterVideo(master=window, scaled=True)
-videoplayer.load(r"./assets/iCarly_scene.mp4")
+videoplayer.load(r"./assets/audio_video/iCarly_scene.mp4")
 videoplayer.pack(expand=True, fill="both")
 
 mixer.init()
-mixer.music.load("./assets/iCarly_scene_compressed.mp3")
+mixer.music.load("./assets/audio_video/iCarly_scene_compressed.mp3")
 
 master_frame = Frame(window)
-master_frame.pack(pady=20)
+master_frame.pack(side=RIGHT, padx=20)
+
+# center this label
+#lbl1 = Label(window, text="Mind Mapper Sample Television", bg="black", fg="white", font="none 24 bold")
+mainLabel = Label(window, text="Chinese TV", bg="black", fg="white", font="none 24 bold")
+mainLabel.config(anchor=CENTER)
+mainLabel.pack()
 
 global vol0
 global vol1
@@ -33,7 +39,11 @@ vol4 = PhotoImage(file='./assets/images/volume4.png')
 # Create Volume Meter
 mixer.music.set_volume(0.625)
 volume_meter = Label(master_frame, image=vol3)
-volume_meter.pack(side=TOP)
+volume_meter.pack(side=RIGHT)
+'''
+volumeLabel = Label(master_frame, text="Volume: 62.5%", bg="black", fg="white", font="none 24 bold")
+volumeLabel.pack(side=RIGHT, row=1, col=0)
+'''
 
 videoplayer.play()
 mixer.music.play()
@@ -65,34 +75,30 @@ def updateVolumeMeter(currVolume):
 def volumeUp():
     currVolume = mixer.music.get_volume()
     mixer.music.set_volume(currVolume + 0.125)
+    currVolume = mixer.music.get_volume()
     print("Volume: ", currVolume)
     updateVolumeMeter(currVolume*100)
 
 def volumeDown():
     currVolume = mixer.music.get_volume()
     mixer.music.set_volume(currVolume - 0.125)
+    currVolume = mixer.music.get_volume()
     print("Volume: ", currVolume)
     updateVolumeMeter(currVolume*100)
 
 def closeTV():
     window.destroy()
 
-# center this label
-#lbl1 = Label(window, text="Mind Mapper Sample Television", bg="black", fg="white", font="none 24 bold")
-label = Label(window, text="Chinese TV", bg="black", fg="white", font="none 24 bold")
-label.config(anchor=CENTER)
-label.pack()
-
 pause_btn = Button(window, text='Pause', width=14, bg='red', fg='black', command=lambda: pause_play())
-pause_btn.pack()
+pause_btn.pack(pady=5)
 
 volUp_btn = Button(window, text='Volume Up', command=lambda: volumeUp())
-volUp_btn.pack(side=TOP, pady=3)
+volUp_btn.pack(side=TOP, padx=5)
 
 volDown_btn = Button(window, text='Volume Down', command=lambda: volumeDown())
-volDown_btn.pack(side=TOP, padx=4)
+volDown_btn.pack(side=TOP, padx=5)
 
 exit_btn = Button(window, text='Exit', command=lambda: closeTV())
-exit_btn.pack(side=TOP, padx=5)
+exit_btn.pack(side=TOP, padx=5, pady=5)
 
 window.mainloop()
