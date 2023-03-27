@@ -6,7 +6,7 @@ void setup() {
   pinMode(A0, INPUT); // read the input on analog pin 0:
   pinMode(A1, INPUT); // read the input on analog pin 1:
   Serial.begin(9600); // initialize serial communication at 9600 bits per second:
-  Serial.println("Setup Starting: ");
+  Serial.println("EMG Movements Now Being Detected");
 }
 
 // the loop routine runs over and over again forever:
