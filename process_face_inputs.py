@@ -2,10 +2,13 @@ import cv2
 import dlib
 import time
 import serial
+import gui
 
 ####This version tries to improve headnod detections which occured in Mouth_HN2
 
 def detect_mouth_and_headnods():
+    gui.window.mainloop()
+    
     # Initialize the webcam
     cap = cv2.VideoCapture(0)
 
@@ -39,7 +42,7 @@ def detect_mouth_and_headnods():
     mouth_open = False
 
     # Initialize serial port to read from
-    ser = serial.Serial('COM5', 9600, timeout=1)
+    ser = serial.Serial('COM4', 9600, timeout=1)
 
     while True:
         # Read a frame from the webcam
@@ -98,6 +101,7 @@ def detect_mouth_and_headnods():
                     mouth_open_duration = time.time() - mouth_open_start_time
                     if mouth_open_duration >= 1:
                         print("Mouth movement")
+                        gui.closeTV()
                 mouth_open = False
 
             # Check for head nodding
@@ -110,6 +114,7 @@ def detect_mouth_and_headnods():
 
                 if nod_count == nod_frames:
                     print("Head nod detected")
+                    gui.pause_play()
                     nod_count = 0
                     time.sleep(1) # Add a 1 second delay
 
@@ -131,8 +136,13 @@ def detect_mouth_and_headnods():
             last_face_center_x = face_center_x
 
             s = ser.readline().decode("utf-8")
-            if(s != ""):
+            if s:
                 print(s)
+                if (s=="Jaw Clench Detected"):
+                    gui.volumeUp()
+                elif (s=="Neck Flex Detected"):
+                    gui.volumeDown()
+
 
         # Display the frame
         cv2.imshow("Webcam", frame)
@@ -147,6 +157,7 @@ def detect_mouth_and_headnods():
     cv2.destroyAllWindows()
 
 
-
 if __name__ == '__main__':
+    gui.initializeTV()
+    print("Running process_face_inputs.py")
     detect_mouth_and_headnods()
