@@ -5,65 +5,61 @@ from pygame import mixer
 
 window = Tk()
 
-def initializeTV():
-    
-    window.title("Television")
-    # 16:9 aspect ratio for television
-    window.geometry("1200x675") 
-    window.configure(bg="black")
-    
-    videoplayer = TkinterVideo(master=window, scaled=True)
-    videoplayer.load(r"./assets/audio_video/iCarly_scene.mp4")
-    videoplayer.pack(expand=True, fill="both")
+window.title("Television")
+# 16:9 aspect ratio for television
+window.geometry("1200x675") 
+window.configure(bg="black")
 
-    mixer.init()
-    mixer.music.load("./assets/audio_video/iCarly_scene_compressed.mp3")
+videoplayer = TkinterVideo(master=window, scaled=True)
+videoplayer.load(r"./assets/audio_video/iCarly_scene.mp4")
+videoplayer.pack(expand=True, fill="both")
 
-    master_frame = Frame(window)
-    master_frame.pack(side=RIGHT, padx=20)
+mixer.init()
+mixer.music.load("./assets/audio_video/iCarly_scene_compressed.mp3")
 
-    # center this label
-    #lbl1 = Label(window, text="Mind Mapper Sample Television", bg="black", fg="white", font="none 24 bold")
-    mainLabel = Label(window, text="Chinese TV", bg="black", fg="white", font="none 24 bold")
-    mainLabel.config(anchor=CENTER)
-    mainLabel.pack()
+master_frame = Frame(window)
+master_frame.pack(side=RIGHT, padx=20)
 
-    global vol0
-    global vol1
-    global vol2
-    global vol3
-    global vol4
-    vol0 = PhotoImage(file='./assets/images/volume0.png')
-    vol1 = PhotoImage(file='./assets/images/volume1.png')
-    vol2 = PhotoImage(file='./assets/images/volume2.png')
-    vol3 = PhotoImage(file='./assets/images/volume3.png')
-    vol4 = PhotoImage(file='./assets/images/volume4.png')
+# center this label
+#lbl1 = Label(window, text="Mind Mapper Sample Television", bg="black", fg="white", font="none 24 bold")
+mainLabel = Label(window, text="Chinese TV", bg="black", fg="white", font="none 24 bold")
+mainLabel.config(anchor=CENTER)
+mainLabel.pack()
 
-    # Create Volume Meter
-    mixer.music.set_volume(0.625)
-    volume_meter = Label(master_frame, image=vol3)
-    volume_meter.pack(side=RIGHT)
-    '''
-    volumeLabel = Label(master_frame, text="Volume: 62.5%", bg="black", fg="white", font="none 24 bold")
-    volumeLabel.pack(side=RIGHT, row=1, col=0)
-    '''
+global vol0
+global vol1
+global vol2
+global vol3
+global vol4
+vol0 = PhotoImage(file='./assets/images/volume0.png')
+vol1 = PhotoImage(file='./assets/images/volume1.png')
+vol2 = PhotoImage(file='./assets/images/volume2.png')
+vol3 = PhotoImage(file='./assets/images/volume3.png')
+vol4 = PhotoImage(file='./assets/images/volume4.png')
 
-    videoplayer.play()
-    mixer.music.play()
+# Create Volume Meter
+mixer.music.set_volume(0.625)
+volume_meter = Label(master_frame, image=vol3)
+volume_meter.pack(side=RIGHT)
+'''
+volumeLabel = Label(master_frame, text="Volume: 62.5%", bg="black", fg="white", font="none 24 bold")
+volumeLabel.pack(side=RIGHT, row=1, col=0)
+'''
 
-    pause_btn = Button(window, text='Pause', width=14, bg='red', fg='black', command=lambda: pause_play())
-    pause_btn.pack(pady=5)
+videoplayer.play()
+mixer.music.play()
 
-    volUp_btn = Button(window, text='Volume Up', command=lambda: volumeUp())
-    volUp_btn.pack(side=TOP, padx=5)
+pause_btn = Button(window, text='Pause', width=14, bg='red', fg='black', command=lambda: pause_play())
+pause_btn.pack(pady=5)
 
-    volDown_btn = Button(window, text='Volume Down', command=lambda: volumeDown())
-    volDown_btn.pack(side=TOP, padx=5)
+volUp_btn = Button(window, text='Volume Up', command=lambda: volumeUp())
+volUp_btn.pack(side=TOP, padx=5)
 
-    exit_btn = Button(window, text='Exit', command=lambda: closeTV())
-    exit_btn.pack(side=TOP, padx=5, pady=5)
+volDown_btn = Button(window, text='Volume Down', command=lambda: volumeDown())
+volDown_btn.pack(side=TOP, padx=5)
 
-    #window.mainloop()
+exit_btn = Button(window, text='Exit', command=lambda: closeTV())
+exit_btn.pack(side=TOP, padx=5, pady=5)
 
 def pause_play():
     if pause_btn["text"] == "Play":
@@ -104,4 +100,7 @@ def volumeDown():
     updateVolumeMeter(currVolume*100)
 
 def closeTV():
+    print("Television will now be closed")
     window.destroy()
+
+#window.mainloop()

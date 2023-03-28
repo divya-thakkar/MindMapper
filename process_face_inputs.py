@@ -2,13 +2,17 @@ import cv2
 import dlib
 import time
 import serial
+
+
 import gui
+
+#gui mainloop
+gui.window.update()
 
 ####This version tries to improve headnod detections which occured in Mouth_HN2
 
 def detect_mouth_and_headnods():
-    gui.window.mainloop()
-    
+
     # Initialize the webcam
     cap = cv2.VideoCapture(0)
 
@@ -26,27 +30,27 @@ def detect_mouth_and_headnods():
     nod_frames = 3
 
     # Define the threshold for vertical movement of the face region to be considered a head nod
-    nod_threshold = 2
-
-    # Define the threshold for horizontal movement of the face region to be considered a right nod
-    right_nod_threshold = 2    
+    nod_threshold = 2 
 
     # Initialize variables for head nod detection
     nod_count = 0
-    horiz_nod_count = 0
     last_face_center_y = None
-    last_face_center_x = None
 
     # Initialize variables for mouth opening time
     mouth_open_start_time = None
     mouth_open = False
 
     # Initialize serial port to read from
-    ser = serial.Serial('COM4', 9600, timeout=1)
-
+    ser = serial.Serial('COM5', 9600, timeout=1)
+    
     while True:
+
+        #gui mainloop
+        gui.window.update()
+
         # Read a frame from the webcam
         ret, frame = cap.read()
+
 
         # Check if the frame is read correctly
         if not ret:
@@ -67,7 +71,6 @@ def detect_mouth_and_headnods():
             # Extract the region of interest (ROI) corresponding to the face region
             x, y, w, h = largest_face
             face_center_y = y + h // 2
-            face_center_x = x + h // 2
             face_roi = gray[y:y+h, x:x+w]
 
             # Detect the facial landmarks in the face ROI
@@ -81,7 +84,6 @@ def detect_mouth_and_headnods():
 
             # Calculate the height and width of the mouth region relative to the height and width of the face region
             face_height = y + h
-            face_width = x + w
             mouth_height = mouth_bottom - mouth_top
 
             mouth_height_ratio_actual = mouth_height / face_height
@@ -120,21 +122,6 @@ def detect_mouth_and_headnods():
 
             last_face_center_y = face_center_y
 
-            # Check for horizontal head nodding
-            if last_face_center_x is not None:
-                face_center_x_diff = abs(face_center_x - last_face_center_x)
-                if face_center_x_diff > nod_threshold:
-                    horiz_nod_count += 1
-                else:
-                    horiz_nod_count = 0
-
-                if horiz_nod_count == nod_frames:
-                    print("Sideways nod detected")
-                    horiz_nod_count = 0
-                    time.sleep(1) # Add a 1 second delay
-
-            last_face_center_x = face_center_x
-
             s = ser.readline().decode("utf-8")
             if s:
                 print(s)
@@ -145,7 +132,7 @@ def detect_mouth_and_headnods():
 
 
         # Display the frame
-        cv2.imshow("Webcam", frame)
+        #cv2.imshow("Webcam", frame)
 
         # Check for user input to quit the program
         key = cv2.waitKey(1)
@@ -158,6 +145,5 @@ def detect_mouth_and_headnods():
 
 
 if __name__ == '__main__':
-    gui.initializeTV()
     print("Running process_face_inputs.py")
     detect_mouth_and_headnods()
