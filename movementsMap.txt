@@ -1,0 +1,8 @@
+head nod - pause/play
+jaw clench - volume up
+neck movement - volume down
+mouth open - exit
+
+
+
+sideways head movement - retired
