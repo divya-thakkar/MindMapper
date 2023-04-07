@@ -2,12 +2,11 @@ import cv2
 import dlib
 import time
 import serial
+from multiprocessing import Process
+import threading
+import queue
 
-
-import gui
-
-#gui mainloop
-gui.window.update()
+main_queue = queue.Queue()
 
 ####This version tries to improve headnod detections which occured in Mouth_HN2
 
@@ -44,9 +43,6 @@ def detect_mouth_and_headnods():
     ser = serial.Serial('COM5', 9600, timeout=1)
     
     while True:
-
-        #gui mainloop
-        gui.window.update()
 
         # Read a frame from the webcam
         ret, frame = cap.read()
@@ -103,7 +99,8 @@ def detect_mouth_and_headnods():
                     mouth_open_duration = time.time() - mouth_open_start_time
                     if mouth_open_duration >= 1:
                         print("Mouth movement")
-                        gui.closeTV()
+                        main_queue.put("Mouth movement")
+                        #gui.closeTV()
                 mouth_open = False
 
             # Check for head nodding
@@ -116,7 +113,8 @@ def detect_mouth_and_headnods():
 
                 if nod_count == nod_frames:
                     print("Head nod detected")
-                    gui.pause_play()
+                    main_queue.put("Head nod detected")
+                    #gui.pause_play()
                     nod_count = 0
                     time.sleep(1) # Add a 1 second delay
 
@@ -125,10 +123,13 @@ def detect_mouth_and_headnods():
             s = ser.readline().decode("utf-8")
             if s:
                 print(s)
+                main_queue.put(s)
+                '''
                 if (s=="Jaw Clench Detected"):
                     gui.volumeUp()
                 elif (s=="Neck Flex Detected"):
                     gui.volumeDown()
+                '''
 
 
         # Display the frame
@@ -143,7 +144,15 @@ def detect_mouth_and_headnods():
     cap.release()
     cv2.destroyAllWindows()
 
-
+'''
 if __name__ == '__main__':
     print("Running process_face_inputs.py")
     detect_mouth_and_headnods()
+    gui.window.mainloop()
+
+    #guiProcess = Process(target=gui.window.mainloop)
+    #openCVProcess = Process(target=detect_mouth_and_headnods)
+
+    #openCVProcess.start()
+    #guiProcess.start()
+'''
