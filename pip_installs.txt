@@ -1,6 +1,7 @@
 pip install opencv-python
 pip install pygame
 pip install tkvideoplayer
-pip install serial
+pip uninstall serial # make sure this is not installed, will lead to AttributeError
+pip install pyserial
 pip install cmake
 pip install dlib
