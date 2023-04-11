@@ -5,6 +5,7 @@ from pygame import mixer
 import process_face_inputs
 import threading
 import queue
+import sys
 
 def pause_play():
     if pause_btn["text"] == "Play":
@@ -17,6 +18,14 @@ def pause_play():
         pause_btn["bg"] = "green"
         mixer.music.pause()
         videoplayer.pause()
+
+def mute_btn_colourChange():
+    if mute_btn["text"] == "Mute":
+        mute_btn["text"] = "Unmute"
+        mute_btn["bg"] = "red"
+    else:
+        mute_btn["text"] = "Mute"
+        mute_btn["bg"] = "white"
 
 def updateVolumeMeter(currVolume):
     if (int(currVolume) < 1):
@@ -44,9 +53,32 @@ def volumeDown():
     print("Volume: ", currVolume)
     updateVolumeMeter(currVolume*100)
 
+def muteVolume():
+    global isMuted
+    global prevVolume
+    if not isMuted:
+        currVolume = mixer.music.get_volume()
+        prevVolume = currVolume
+        mixer.music.set_volume(0)
+        currVolume = mixer.music.get_volume()
+        print("Volume Muted")
+        print("Volume: ", currVolume)
+        updateVolumeMeter(currVolume*100)
+        isMuted = True
+        mute_btn_colourChange()
+    else:
+        mixer.music.set_volume(prevVolume)
+        currVolume = mixer.music.get_volume()
+        print("Volume: ", currVolume)
+        updateVolumeMeter(currVolume*100)
+        isMuted = False
+        mute_btn_colourChange()
+          
 def closeTV():
     print("Television will now be closed")
+    mixer.music.stop()
     window.destroy()
+    sys.exit(1)
 
 def after_callback():
     try:
@@ -55,15 +87,12 @@ def after_callback():
         # let's try again later
         window.after(100, after_callback)
         return
-
-    print('after_callback got ', message)
-
     if (message=="Jaw Clench Detected"):
         volumeUp()
     elif (message=="Neck Flex Detected"):
         volumeDown()
     elif (message=="Mouth movement"):
-        closeTV()
+        muteVolume()
     elif (message=="Head nod detected"):
         pause_play()
 
@@ -89,7 +118,7 @@ if __name__ == '__main__':
 
     # center this label
     #lbl1 = Label(window, text="Mind Mapper Sample Television", bg="black", fg="white", font="none 24 bold")
-    mainLabel = Label(window, text="Chinese TV", bg="black", fg="white", font="none 24 bold")
+    mainLabel = Label(window, text="Mind Mapper", bg="black", fg="white", font="none 24 bold")
     mainLabel.config(anchor=CENTER)
     mainLabel.pack()
 
@@ -98,6 +127,10 @@ if __name__ == '__main__':
     global vol2
     global vol3
     global vol4
+    global isMuted
+    isMuted = False
+    global prevVolume
+    prevVolume = 0.625
     vol0 = PhotoImage(file='./assets/images/volume0.png')
     vol1 = PhotoImage(file='./assets/images/volume1.png')
     vol2 = PhotoImage(file='./assets/images/volume2.png')
@@ -124,6 +157,9 @@ if __name__ == '__main__':
 
     volDown_btn = Button(window, text='Volume Down', command=lambda: volumeDown())
     volDown_btn.pack(side=TOP, padx=5)
+
+    mute_btn = Button(window, text='Mute', command=lambda: muteVolume())
+    mute_btn.pack(side=TOP, padx=5, pady=5)
 
     exit_btn = Button(window, text='Exit', command=lambda: closeTV())
     exit_btn.pack(side=TOP, padx=5, pady=5)
